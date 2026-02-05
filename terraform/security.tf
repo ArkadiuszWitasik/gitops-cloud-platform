@@ -1,39 +1,26 @@
 resource "aws_security_group" "lb" {
-  name = "lb-security-group"
-  description = "Access to load balancer"
+  name   = "lb-security-group"
   vpc_id = aws_vpc.main.id
 
-  ingress {
-   protocol = "tcp"
-   from_port = 8000
-   to_port = 8000
-   cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-   protocol = "-1"
-   from_port = 0
-   to_port = 0
-   cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = "dev-lb-security-group"
   }
 }
 
-resource "aws_security_group" "ecs_tasks" {
-  name = "ecs-tasks-security-group"
-  description = "Inbound access only from load balancer"
+resource "aws_security_group" "webapp" {
+  name   = "webapp-security-group"
   vpc_id = aws_vpc.main.id
 
-  ingress {
-   protocol = "tcp"
-   from_port = 8000
-   to_port = 8000
-   security_groups = [aws_security_group.lb.id]
+  tags = {
+    Name = "dev-webapp-security-group"
   }
+}
 
-  egress {
-   protocol = "-1"
-   from_port = 0
-   to_port = 0
-   cidr_blocks = ["0.0.0.0/0"]
+resource "aws_security_group" "database" {
+  name   = "database-security-group"
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "dev-database-security-group"
   }
 }

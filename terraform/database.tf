@@ -7,8 +7,8 @@ data "aws_secretsmanager_secret_version" "dev-db-postgre-value" {
 }
 
 resource "aws_db_subnet_group" "postgre" {
-  name = "dev-db"
-  subnet_ids = [ aws_subnet.private_zone1.id, aws_subnet.private_zone2.id ]
+  name       = "dev-db"
+  subnet_ids = [aws_subnet.private_zone1.id, aws_subnet.private_zone2.id]
 
   tags = {
     Name = "dev-db"

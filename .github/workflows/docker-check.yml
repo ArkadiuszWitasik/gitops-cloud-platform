@@ -1,0 +1,12 @@
+name: Docker check
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health check
+        run: echo "Health check"
+
+      - name: Check Docker
+        run: docker info

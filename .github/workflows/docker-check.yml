@@ -1,12 +1,14 @@
 name: Docker check
-on: [push]
+on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Health check
-        run: echo "Health check"
+      - name: checkout
+        uses: actions/checkout@v4
 
-      - name: Check Docker
-        run: docker info
+      - name: Build docker image
+        run: docker build -t webapi:$(date +"%F_%H%M%S") ./web-app/
+      - name: Check if docker image was built 
+        run: docker images

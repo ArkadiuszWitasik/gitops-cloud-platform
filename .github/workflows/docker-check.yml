@@ -10,7 +10,6 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: Build docker image
-        # run: docker build -t $ECR_URI:$(date +"%F_%H%M%S") ./web-app/
         run: docker build -t web-app:$SHORT_SHA ./web-app/
       - name: Check if docker image was built 
         run: docker images

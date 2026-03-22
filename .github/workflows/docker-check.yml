@@ -2,13 +2,14 @@ name: Docker check
 on: [workflow_dispatch]
 env: 
   ECR_URI: ${{secrets.ECR_URI}}
-  SHORT_SHA: "${GITHUB_SHA::7}
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - name: Create ENV variable based on commit SHA
+        run: SHORT_SHA=${GITHUB_SHA::7}
       - name: Build docker image
         run: docker build -t web-app:$SHORT_SHA ./web-app/
       - name: Check if docker image was built 

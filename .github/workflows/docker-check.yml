@@ -1,14 +1,19 @@
 name: Docker check
 on: [workflow_dispatch]
-
+env: 
+  ECR_URI: ${{secrets.ECR_URI}}   
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v4
-
       - name: Build docker image
-        run: docker build -t webapi:$(date +"%F_%H%M%S") ./web-app/
+        # run: docker build -t $ECR_URI:$(date +"%F_%H%M%S") ./web-app/
+        run: docker build -t web-app:${{ github.sha_short }} ./web-app/
       - name: Check if docker image was built 
+        run: docker images
+      - name:  Tag docker image for AWS ECR
+        run: docker tag web-app:${{ github.sha_short }}} $ECR_URI:${{ github.sha_short }}
+      - name: Check if docker tags was changed 
         run: docker images

@@ -8,13 +8,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: Create ENV variable based on commit SHA
-        run: SHORT_SHA=${GITHUB_SHA::7}
       - name: Build docker image
-        run: docker build -t web-app:$SHORT_SHA ./web-app/
+        run: docker build -t web-app:${{ github.sha }} ./web-app/
       - name: Check if docker image was built 
         run: docker images
       - name:  Tag docker image for AWS ECR
-        run: docker tag web-app:$SHORT_SHA $ECR_URI:$SHORT_SHA
+        run: docker tag web-app:${{ github.sha }} $ECR_URI:${{ github.sha }}
       - name: Check if docker tags was changed 
         run: docker images

@@ -3,7 +3,7 @@ on: [workflow_dispatch]
 env: 
   ECR_URI: ${{secrets.ECR_URI}}
   AWS_REGION: eu-central-1
-  ECR_REPOSITORY: repository/webapp-repository
+  ECR_REPOSITORY: webapp-repository
 jobs:
   build:
     runs-on: ubuntu-latest

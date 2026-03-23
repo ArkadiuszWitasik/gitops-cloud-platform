@@ -1,18 +1,28 @@
-name: Docker check
+name: Deploy to AWS ECR
 on: [workflow_dispatch]
 env: 
   ECR_URI: ${{secrets.ECR_URI}}
+  AWS_REGION: eu-central-1
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v6.0.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Build docker image
         run: docker build -t web-app:${{ github.sha }} ./web-app/
-      - name: Check if docker image was built 
-        run: docker images
-      - name:  Tag docker image for AWS ECR
-        run: docker tag web-app:${{ github.sha }} $ECR_URI:${{ github.sha }}
-      - name: Check if docker tags was changed 
-        run: docker images
+
+      - name: Tag docker image and push it to AWS ECR
+        run: |
+          docker tag web-app:${{ github.sha }} $ECR_URI:${{ github.sha }}
+          docker push $ECR_URI:${{ github.sha }}
+          echo "image=$ECR_URI:${{ github.sha }}" >> $GITHUB_OUTPUT

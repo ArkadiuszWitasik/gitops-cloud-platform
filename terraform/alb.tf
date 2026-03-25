@@ -9,9 +9,9 @@ resource "aws_alb" "main" {
 }
 
 resource "aws_alb_target_group" "main_lb_target_group" {
-  name        = "main_lb_target_group"
+  name        = "main-lb-target-group"
   protocol    = "HTTP"
-  port        = 80
+  port        = 8000
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
 

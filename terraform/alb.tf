@@ -31,7 +31,7 @@ resource "aws_alb_target_group" "main_lb_target_group" {
 
 resource "aws_alb_listener" "webapp_alb_listener" {
   load_balancer_arn = aws_alb.main.id
-  port              = 8000
+  port              = 80
   protocol          = "HTTP"
 
   default_action {

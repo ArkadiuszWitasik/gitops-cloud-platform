@@ -1,7 +1,6 @@
 name: Deploy to AWS ECR
 on: [workflow_dispatch]
 env: 
-  ECR_URI: ${{secrets.ECR_URI}}
   AWS_REGION: eu-central-1
   ECR_REPOSITORY: webapp-repository
 jobs:
@@ -23,14 +22,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build docker image
-        run: docker build -t web-app:${{ github.sha }} ./web-app/
-
-      - name: Tag docker image and push it to AWS ECR
+      - name: Build, tag docker image and push it to AWS ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha  }}
         run: |
+          docker build -t web-app:$IMAGE_TAG ./web-app/
           docker tag web-app:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
